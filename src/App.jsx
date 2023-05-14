@@ -1,10 +1,11 @@
 import "./assets/styles/reset.css";
 import "./assets/styles/globalStyle.css";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <>
-      <h1>Blank</h1>
+      <Home />
     </>
   );
 }
