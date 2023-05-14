@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { postCsv } from "../services/services";
+import Table from "../components/Table";
 
 export default function Home() {
-  const [selectedFile, setSelectedFile] = useState();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [statusTable, setStatusTable] = useState();
 
   function handleFileChange(e) {
     setSelectedFile(e.target.files[0]);
   }
+
+  useEffect(() => {}, [statusTable]);
 
   function handleValidation() {
     const formData = new FormData();
@@ -15,7 +19,7 @@ export default function Home() {
 
     postCsv(formData)
       .then((ans) => {
-        console.log(ans.data);
+        setStatusTable(ans.data);
       })
       .catch((error) => alert(`Opa, algo deu errado... ${error.message}`));
   }
@@ -24,7 +28,21 @@ export default function Home() {
     <>
       <h1>Validador de Preços</h1>
       <input type="file" accept=".csv" onChange={handleFileChange} />
-      <button onClick={handleValidation}>Validar</button>
+      <button onClick={handleValidation} disabled={!selectedFile}>
+        Validar
+      </button>
+      <div>
+        {statusTable
+          ? statusTable.map((product, index) => (
+              <Table
+                key={index}
+                productId={product.product_code}
+                newPrice={product.new_price}
+                status={product.status}
+              />
+            ))
+          : ""}
+      </div>
     </>
   );
 }
