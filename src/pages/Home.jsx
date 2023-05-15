@@ -7,7 +7,7 @@ import { RotatingLines } from "react-loader-spinner";
 
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [statusTable, setStatusTable] = useState([]);
+  const [statusTable, setStatusTable] = useState();
   const [loading, setLoading] = useState(false);
 
   const formData = new FormData();
@@ -17,9 +17,7 @@ export default function Home() {
     setSelectedFile(e.target.files[0]);
   }
 
-  useEffect(() => {
-    console.log(statusTable);
-  }, [statusTable]);
+  useEffect(() => {}, [statusTable]);
 
   function handleValidation() {
     setLoading(true);
@@ -42,8 +40,9 @@ export default function Home() {
 
     updateDb(formData)
       .then(() => {
-        setStatusTable([]);
+        setStatusTable();
         setLoading(false);
+        alert(`Produtos atualizados com sucesso!`);
       })
       .catch((error) => {
         alert(`Erro: ${error.response.data}`);
@@ -66,7 +65,7 @@ export default function Home() {
       {loading ? (
         <RotatingLines strokeColor="grey" strokeWidth="5" animationDuration="0.75" width="80" visible={true} />
       ) : (
-        <div>{statusTable ? <Table statusTable={statusTable} /> : ""}</div>
+        <>{statusTable ? <Table statusTable={statusTable} /> : ""}</>
       )}
     </Wrapper>
   );

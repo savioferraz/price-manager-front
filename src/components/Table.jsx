@@ -5,13 +5,17 @@ export default function Table({ statusTable }) {
     <Wrapper>
       <table>
         <thead>
-          <th>Código</th>
-          <th>Nome</th>
-          <th>Preço Venda</th>
-          <th>Preço Custo</th>
-          <th>Novo Preço</th>
-          <th>Ajuste</th>
-          <th>Status</th>
+          {statusTable.length > 0 && (
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>Preço Venda</th>
+              <th>Preço Custo</th>
+              <th>Novo Preço</th>
+              <th>Ajuste</th>
+              <th>Status</th>
+            </tr>
+          )}
         </thead>
 
         <tbody>
@@ -36,6 +40,7 @@ const Wrapper = styled.div`
   margin: 16px;
   border: 1px solid grey;
   border-radius: 2px;
+  font-size: 14px;
 
   table {
     width: 100%;
