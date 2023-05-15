@@ -16,7 +16,7 @@ export default function Table({ statusTable }) {
 
         <tbody>
           {statusTable.map((product, index) => (
-            <tr className={product.status === "OK" ? "status-ok" : "status-error"}>
+            <tr className={product.status === "OK" ? "status-ok" : "status-error"} key={index}>
               <td>{product.productCode}</td>
               <td>{product.productName.trim(12)}</td>
               <td>{product.salesPrice}</td>
@@ -46,11 +46,12 @@ const Wrapper = styled.div`
     padding: 10px;
     background-color: #eee;
     font-weight: bold;
+    border-bottom: 2px solid dimgray;
   }
 
   td {
     padding: 10px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid gray;
     text-align: center;
   }
 

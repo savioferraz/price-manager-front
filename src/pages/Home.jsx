@@ -1,12 +1,17 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { postCsv } from "../services/services";
+import { postCsv, updateDb } from "../services/services";
 import Table from "../components/Table";
 import styled from "styled-components";
+import { RotatingLines } from "react-loader-spinner";
 
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [statusTable, setStatusTable] = useState();
+  const [statusTable, setStatusTable] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const formData = new FormData();
+  formData.append("csvFile", selectedFile);
 
   function handleFileChange(e) {
     setSelectedFile(e.target.files[0]);
@@ -17,14 +22,33 @@ export default function Home() {
   }, [statusTable]);
 
   function handleValidation() {
-    const formData = new FormData();
-    formData.append("csvFile", selectedFile);
+    setLoading(true);
 
     postCsv(formData)
       .then((ans) => {
         setStatusTable(ans.data);
+        setLoading(false);
       })
-      .catch((error) => alert(`Opa, algo deu errado... ${error.message}`));
+      .catch((error) => {
+        alert(`Erro: ${error.response.data}`);
+        setLoading(false);
+      });
+  }
+
+  const validateStatus = statusTable && statusTable.every((product) => product.status === "OK");
+
+  function handleUpdate() {
+    setLoading(true);
+
+    updateDb(formData)
+      .then(() => {
+        setStatusTable([]);
+        setLoading(false);
+      })
+      .catch((error) => {
+        alert(`Erro: ${error.response.data}`);
+        setLoading(false);
+      });
   }
 
   return (
@@ -35,9 +59,15 @@ export default function Home() {
         <button className="validate" onClick={handleValidation} disabled={!selectedFile}>
           Validar
         </button>
-        <button className="update">Atualizar</button>
+        <button className="update" onClick={handleUpdate} disabled={!validateStatus}>
+          Atualizar
+        </button>
       </div>
-      <div>{statusTable ? <Table statusTable={statusTable} /> : ""}</div>
+      {loading ? (
+        <RotatingLines strokeColor="grey" strokeWidth="5" animationDuration="0.75" width="80" visible={true} />
+      ) : (
+        <div>{statusTable ? <Table statusTable={statusTable} /> : ""}</div>
+      )}
     </Wrapper>
   );
 }

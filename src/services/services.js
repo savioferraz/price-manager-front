@@ -7,4 +7,9 @@ function postCsv(formData) {
   return request;
 }
 
-export { postCsv };
+function updateDb(formData) {
+  const request = axios.put(`${BASE_URL}/stock/update`, formData);
+  return request;
+}
+
+export { postCsv, updateDb };
